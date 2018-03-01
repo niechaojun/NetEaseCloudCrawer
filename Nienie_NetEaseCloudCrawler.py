@@ -4,25 +4,19 @@ from Crypto.Cipher import AES
 import base64
 import json
 import os
+import time
 '''
        Coded by nienie
 '''
 
-
-
-
-
 def Nie_get_params(PageNum,Count):
     PageNum = (PageNum-1)*20
-    print PageNum
-    print Count
     first_param = "{ rid: \"R_SO_4_418603077\", offset: "+str(PageNum)+", total: \"false\", limit: "+str(Count)+", csrf_token: \"\" }"
     forth_param = "0CoJUm6Qyw8W8jud"
     first_key = forth_param
     second_key ='nienienienienien'
     h_encText = AES_encrypt(first_key,first_param)
     h_encText = AES_encrypt(second_key,h_encText)
-    print h_encText
     return h_encText
 
 def AES_encrypt(key, text):
@@ -65,7 +59,7 @@ def N_comment(id,ReviewCount):
             fp.write("最热评论:"+'\r\n')
             print u"最热评论"+ str(len(json_1["hotComments"]))
             for i in xrange(0,len(json_1["hotComments"])-1):
-                HotReview = json_1["hotComments"][i]['user']['nickname'] + " : " + json_1["hotComments"][i]['content'] + " (" + str(json_1["hotComments"][i]['likedCount']) + ")"
+                HotReview = json_1["hotComments"][i]['user']['nickname'] + " : " + json_1["hotComments"][i]['content'] + " (" + str(json_1["hotComments"][i]['likedCount']) + ") "+time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(float(str(json_1['hotComments'][i]['time'])[0:10])))
                 print HotReview
                 fp.write(HotReview.encode('utf-8')+'\r\n')
                 print
@@ -74,7 +68,7 @@ def N_comment(id,ReviewCount):
         print u"最新评论" + str(len(json_1['comments']))
         ReviewKeep+=len(json_1['comments'])
         for i in xrange(0,len(json_1['comments'])):
-            NewReview = json_1['comments'][i]['user']['nickname'] + " : " + json_1['comments'][i]['content'] + " (" + str(json_1["comments"][i]['likedCount']) + ")"
+            NewReview = json_1['comments'][i]['user']['nickname'] + " : " + json_1['comments'][i]['content'] + " (" + str(json_1["comments"][i]['likedCount']) + ") "+time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(float(str(json_1['comments'][i]['time'])[0:10])))
             print NewReview
             fp.write(NewReview.encode('utf-8')+'\r\n')
             print
@@ -82,4 +76,4 @@ def N_comment(id,ReviewCount):
     print str(ReviewKeep)+u" 条评论已经保存在 "+ KeepFile
 
 if __name__=='__main__':
-    N_comment(id=418603077,ReviewCount = 199)  #id为歌曲的id ReviewCount为最新的多少条评论
+    N_comment(id=418603077,ReviewCount = 10)  #id为歌曲的id ReviewCount为最新的多少条评论
